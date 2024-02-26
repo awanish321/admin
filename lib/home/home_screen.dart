@@ -13,10 +13,10 @@ import 'products/products_screen.dart';
 import 'subcategory/subcategory_screen.dart';
 import 'components/users_screen.dart';
 
-
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key,});
-
+  const HomeScreen({
+    super.key,
+  });
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -46,7 +46,10 @@ class _HomeScreenState extends State<HomeScreen> {
               const Gap(80),
               ListTile(
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const HomeScreen()));
                 },
                 leading: const Icon(Iconsax.home,),
                 title: Text('Home', style: GoogleFonts.nunitoSans(fontSize: 15, fontWeight: FontWeight.bold),),
@@ -79,114 +82,117 @@ class _HomeScreenState extends State<HomeScreen> {
         centerTitle: true,
         backgroundColor: Colors.grey,
         elevation: 0,
-        title: Text(
-          "A Mart",
-          style: GoogleFonts.nunitoSans(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black),
-        ),
+        title: Text("A Mart", style: GoogleFonts.nunitoSans(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black),),
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 30,vertical: 10),
-        child: ListView( // Use ListView for scrollable content
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+        child: ListView(
+          // Use ListView for scrollable content
           children: [
-            Center(child: Text("AMart Admin", style: GoogleFonts.nunitoSans(fontSize: 25, fontWeight: FontWeight.bold),)),
+            Center(
+                child: Text("AMart Admin", style: GoogleFonts.nunitoSans(fontSize: 25, fontWeight: FontWeight.bold),)),
             const Gap(20),
             Row(
               children: [
                 Expanded(
-                  child: StreamBuilder<QuerySnapshot>(
-                    stream: FirebaseFirestore.instance.collection("Categories").snapshots(),
-                    builder: (context, categorySnapshot) {
-                      if (categorySnapshot.connectionState == ConnectionState.waiting) {
-                        // return const CircularProgressIndicator();
-                      }
-
-                      int categoryCount = categorySnapshot.data?.docs.length ?? 0;
-
-                      return StreamBuilder<QuerySnapshot>(
-                        stream: FirebaseFirestore.instance.collection("SubCategory").snapshots(),
-                        builder: (context, subCategorySnapshot) {
-                          if (subCategorySnapshot.connectionState == ConnectionState.waiting) {
+                    child: StreamBuilder<QuerySnapshot>(
+                        stream: FirebaseFirestore.instance.collection("Categories").snapshots(),
+                        builder: (context, categorySnapshot) {
+                          if (categorySnapshot.connectionState == ConnectionState.waiting) {
                             // return const CircularProgressIndicator();
                           }
 
-                          int subCategoryCount = subCategorySnapshot.data?.docs.length ?? 0;
+                          int categoryCount = categorySnapshot.data?.docs.length ?? 0;
 
                           return StreamBuilder<QuerySnapshot>(
-                            stream: FirebaseFirestore.instance.collection("SliderBanner").snapshots(),
-                            builder: (context, sliderBannerSnapshot) {
-                              if (sliderBannerSnapshot.connectionState == ConnectionState.waiting) {
-                                // return const CircularProgressIndicator();
+                              stream: FirebaseFirestore.instance.collection("SubCategory").snapshots(),
+                              builder: (context, subCategorySnapshot) {
+                                if (subCategorySnapshot.connectionState == ConnectionState.waiting) {
+                                  // return const CircularProgressIndicator();
+                                }
+
+                                int subCategoryCount = subCategorySnapshot.data?.docs.length ?? 0;
+
+                                return StreamBuilder<QuerySnapshot>(
+                                  stream: FirebaseFirestore.instance.collection("SliderBanner").snapshots(),
+                                  builder: (context, sliderBannerSnapshot) {
+                                    if (sliderBannerSnapshot.connectionState == ConnectionState.waiting) {
+                                      // return const CircularProgressIndicator();
+                                    }
+
+                                    int sliderBannerCount = sliderBannerSnapshot.data?.docs.length ?? 0;
+
+                                    return StreamBuilder<QuerySnapshot>(
+                                      stream: FirebaseFirestore.instance.collection("Products").snapshots(),
+                                      builder: (context, productsSnapshot) {
+                                        if (productsSnapshot.connectionState == ConnectionState.waiting) {
+                                          // return const CircularProgressIndicator();
+                                        }
+
+                                        int productsCount = productsSnapshot.data?.docs.length ?? 0;
+
+                                        return StreamBuilder<QuerySnapshot>(
+                                          stream: FirebaseFirestore.instance.collection("users").snapshots(),
+                                          builder: (context, usersSnapshot) {
+                                            if (usersSnapshot.connectionState == ConnectionState.waiting) {
+                                              // return const CircularProgressIndicator();
+                                            }
+
+                                            int usersCount = usersSnapshot.data?.docs.length ?? 0;
+
+                                            // Define a list of card data with images, text, and onTap handlers
+                                            List<Map<String,
+                                                dynamic>> cardData = [
+                                              {"image": categoryIcon, "text": "Category", "count": categoryCount.toString(), "onTap": _openCategoryScreen},
+                                              {"image": subCategoryIcon, "text": "SubCategory", "count": subCategoryCount.toString(), "onTap": _openSubCategoryScreen},
+                                              {"image": productsIcon, "text": "Products", "count": productsCount.toString(), "onTap": _openProductsScreen},
+                                              {"image": usersIcon, "text": "All Users", "count": usersCount.toString(), "onTap": _openUsersScreen},
+                                              {"image": sliderBannerIcon, "text": "Slider Banner", "count": sliderBannerCount.toString(), "onTap": _openSliderBannerScreen},
+                                              {"image": ordersIcon, "text": "Orders", "count": "0", "onTap": _openOrdersScreen},
+                                              {"image": brandsIcon, "text": "Brands", "count": "0", "onTap": _openOrdersScreen},
+                                              {"image": cardsIcon, "text": "Cards", "count": "0", "onTap": _openOrdersScreen},
+                                            ];
+
+                                            return GridView.count(
+                                              crossAxisCount: 2,
+                                              childAspectRatio: 1.0,
+                                              mainAxisSpacing: 10.0,
+                                              crossAxisSpacing: 10.0,
+                                              shrinkWrap: true,
+                                              physics:
+                                              const NeverScrollableScrollPhysics(),
+                                              children: List.generate(
+                                                  cardData.length, (index) {
+                                                    return GestureDetector(
+                                                      onTap: cardData[index]["onTap"],
+                                                      child: Card(
+                                                        color: CupertinoColors.systemGrey3,
+                                                        child: Column(
+                                                          mainAxisAlignment: MainAxisAlignment.center,
+                                                          children: [
+                                                            Image.asset(cardData[index]["image"], width: 48.0, height: 48.0,),
+                                                            const SizedBox(height: 8.0),
+                                                            Text(cardData[index]["text"], style: GoogleFonts.nunitoSans(fontSize: 15, fontWeight: FontWeight.w500),),
+                                                            const SizedBox(height: 8.0),
+                                                            Text(cardData[index]["count"], style: GoogleFonts.nunitoSans(fontSize: 15),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    );
+                                                  }),
+                                            );
+                                          },
+                                        );
+                                      },
+                                    );
+                                  },
+                                );
                               }
-
-                              int sliderBannerCount = sliderBannerSnapshot.data?.docs.length ?? 0;
-
-                              return StreamBuilder<QuerySnapshot>(
-                                stream: FirebaseFirestore.instance.collection("Products").snapshots(),
-                                builder: (context, productsSnapshot) {
-                                  if (productsSnapshot.connectionState == ConnectionState.waiting) {
-                                    // return const CircularProgressIndicator();
-                                  }
-
-                                  int productsCount = productsSnapshot.data?.docs.length ?? 0;
-
-                          // Define a list of card data with images, text, and onTap handlers
-                          List<Map<String, dynamic>> cardData = [
-                            {"image": categoryIcon, "text": "Category","count": categoryCount.toString(), "onTap": _openCategoryScreen},
-                            {"image": subCategoryIcon, "text": "SubCategory", "count": subCategoryCount.toString(), "onTap": _openSubCategoryScreen},
-                            // Add other cards as needed...
-                            {"image": productsIcon, "text": "Products", "count": productsCount.toString(), "onTap": _openProductsScreen},
-                            {"image": usersIcon, "text": "All Users", "count": "0", "onTap": _openUsersScreen},
-                            {"image": sliderBannerIcon, "text": "Slider Banner", "count": sliderBannerCount.toString(), "onTap": _openSliderBannerScreen},
-                            {"image": ordersIcon, "text": "Orders", "count": "0", "onTap": _openOrdersScreen},
-                            {"image": brandsIcon, "text": "Orders", "count": "0", "onTap": _openOrdersScreen},
-                            {"image": cardsIcon, "text": "Orders", "count": "0", "onTap": _openOrdersScreen},
-                          ];
-
-                          return GridView.count(
-                            crossAxisCount: 2,
-                            childAspectRatio: 1.0,
-                            mainAxisSpacing: 10.0,
-                            crossAxisSpacing: 10.0,
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            children: List.generate(cardData.length, (index) {
-                              return GestureDetector(
-                                onTap: cardData[index]["onTap"],
-                                child: Card(
-                                  color: CupertinoColors.systemGrey3,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Image.asset(
-                                        cardData[index]["image"],
-                                        width: 48.0,
-                                        height: 48.0,
-                                      ),
-                                      const SizedBox(height: 8.0),
-                                      Text(
-                                        cardData[index]["text"],
-                                        style: GoogleFonts.nunitoSans(fontSize: 17.0, fontWeight: FontWeight.w500),
-                                      ),
-                                      const SizedBox(height: 8.0),
-                                      Text(
-                                        cardData[index]["count"],
-                                        style: GoogleFonts.nunitoSans(fontSize: 15),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            }),
                           );
-                        },
-                      );
-                    },
-                  );
-                    },
-                  );
-                      }
-                  )
-                )
+                        }
+                    )
+                          )
               ],
             ),
           ],
@@ -194,7 +200,6 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-
 
   void _openCategoryScreen() {
     // Navigate to the CategoryScreen

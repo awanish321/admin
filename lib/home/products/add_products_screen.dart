@@ -24,7 +24,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
   String? productName;
   String? productTitle;
   double? productPrice;
-  double? salePrice; // New variable for sale price
+  double? salePrice; //
   DateTime? deliveryDate;
   List<File> selectedImages = [];
   String? productDetailTitle1;
@@ -488,13 +488,16 @@ class _AddProductScreenState extends State<AddProductScreen> {
           final formattedPrice =
           NumberFormat.currency(locale: 'en_IN', symbol: '')
               .format(productPrice!);
+          final formattedSalePrice =
+          NumberFormat.currency(locale: 'en_IN', symbol: '')
+              .format(salePrice!);
 
           // Example: Saving product to Firestore
           await FirebaseFirestore.instance.collection('Products').add({
             'productName': productName,
             'productTitle': productTitle,
             'productPrice': formattedPrice,
-            'salePrice': salePrice,
+            'salePrice': formattedSalePrice,
             'deliveryDate': deliveryDate,
             'category': selectedCategory,
             'subCategory': selectedSubCategory,

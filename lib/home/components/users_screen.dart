@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-import '../../helper/colors.dart';
 import '../../models/users_model.dart';
 
 class UsersScreen extends StatelessWidget {
